@@ -1,13 +1,13 @@
-Gutenberg Image Resizer for Fly Image Resizer
-=============================================
+Gutenberg Dynamic Image Generator for Fly Image Resizer
+=======================================================
 
 #### Note: This Plugin accompanies [Fly Dynamic Image Resizer](https://wordpress.org/plugins/fly-dynamic-image-resizer/) by Junaid Bhura.
 
 ## The Problem
 
-Fly Dynamic Image resizer allows developers to generate specific sizes depending upon need rather than rely upon WordPress’ set media sizes. We have written an API call that allows these images to be generated when blocks are created. :weary:
+Fly Dynamic Image resizer allows developers to generate specific sizes depending upon need rather than rely upon WordPress’ set media sizes. We have written an API call that allows these images to be generated when blocks are created.
 
-However, if a user ever clears the Fly Images folder, these images will not be resized.
+However, if a user ever clears the Fly Images folder, these images will not be resized. :weary:
 
 ## The Solution :raised_hands:
 
@@ -38,4 +38,8 @@ RewriteRule . /index.php?esc-fly-image-generate=1 [L]
 ## Help Wanted :grin:
 
 1. Create an Nginx configuration
-2. Allow the `.htaccess` rule to be written upon installation and removed upon unistallation.
+2. Allow the `.htaccess` rule to be written upon installation and removed when uninstalled.
+
+## To Do
+
+1. Add API Endpoint to this Plugin.
