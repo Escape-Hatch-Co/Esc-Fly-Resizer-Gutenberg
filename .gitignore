@@ -1,0 +1,7 @@
+# Jetbrains
+.idea/workspace.xml
+.idea/tasks.xml
+
+# VS Code
+!/.vscode
+!/.vscode/*.code-workspace
