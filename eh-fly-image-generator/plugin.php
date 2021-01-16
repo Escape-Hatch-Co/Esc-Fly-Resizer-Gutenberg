@@ -42,9 +42,10 @@ class Esc_Fly_Image_Generator {
 		//If Generate Image Exists, generate and return image.
 		if ( $generate_image ) {
 			$this->generate_image();
-		}
 
-		$this->generate_404();
+			//The above function will exit, so this will only be called if the image could not be generated.
+			$this->generate_404();
+		}
 	}
 
 	/**
