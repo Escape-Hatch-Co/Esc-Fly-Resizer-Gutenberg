@@ -7,7 +7,7 @@ Gutenberg Dynamic Image Generator for Fly Image Resizer
 
 Fly Dynamic Image resizer allows developers to generate specific sizes depending upon need rather than rely upon WordPress’ set media sizes. These are typically rendered via `fly_get_attachment_image_src` function calls. In Gutenberg, these don't work because everything is generated client-side and then saved to post content. To handle custom sizes in our Gutenberg blocks, we have written an API call that allows these images to be generated when blocks are created (will add this to this repo soon).
 
-However, if a user ever clears the Fly Images folder, these images will not be deleted and then never resized again unless the user goes and edits the block. :weary:
+However, if a user ever clears the Fly Images folder, these images will not be deleted and then never resized again unless the user goes and edits the block. (i.e. All images will 404!) :weary:
 
 ## The Solution :raised_hands:
 
@@ -17,7 +17,7 @@ In short, imagine a source image is: `https://example.com/wp-content/uploads/fly
 
 1. If the image exists, it is simply returned from the server as usual (the endpoint is never hit).
 2. If the image does _not_ exist:
-	- The image is generated and saved to the `fly-images` folder, so that the image will exist for subsequent visitors.
+	- The image is generated and saved to the `fly-images` folder with the appropriate width, height and cropping, so that the image will exist for subsequent visitors.
 	- The image binary is returned in the response so that the original requester receives the image as well (albeit slightly slower because the image must be generated)
 
 That's it!
