@@ -85,9 +85,9 @@ class Esc_Fly_Image_Generator {
 			return;
 		}
 
-		$id     = $image_args[2];
-		$width  = $image_args[3];
-		$height = $image_args[4];
+		$id     = (int) $image_args[2];
+		$width  = (int) $image_args[3];
+		$height = (int) $image_args[4];
 		$crop   = $image_args[5] ?? '';
 
 		$crop = ltrim( $crop, '-' );
