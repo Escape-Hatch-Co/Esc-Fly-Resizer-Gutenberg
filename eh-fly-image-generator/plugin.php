@@ -79,19 +79,56 @@ class Esc_Fly_Image_Generator {
 	 * Generates & Returns Image from Fly based upon URL
 	 */
 	public function generate_image() {
-		preg_match( '/wp-content\/uploads\/fly-images\/(\d+)\/.+-(\d+)x(\d+)(-c)?/', $_SERVER['REQUEST_URI'] ?? '', $image_args );
+		preg_match( '/wp-content\/uploads\/(sites\/\d+\/)?fly-images\/(\d+)\/.+-(\d+)x(\d+)(-[lrc]?[tcb])?/', $_SERVER['REQUEST_URI'] ?? '', $image_args );
 		if ( ! $image_args ) {
 			$this->generate_404();
 			return;
 		}
 
-		$id     = $image_args[1];
-		$width  = $image_args[2];
-		$height = $image_args[3];
-		$crop   = (bool) ( $image_args[4] ?? false );
+		$id     = $image_args[2];
+		$width  = $image_args[3];
+		$height = $image_args[4];
+		$crop   = $image_args[5] ?? '';
+
+		$crop = ltrim( $crop, '-' );
+
+		switch ( $crop ) {
+			case 'c':
+				$crop_arg = true;
+				break;
+			case 'ct':
+				$crop_arg = [ 'center', 'top' ];
+				break;
+			case 'cb':
+				$crop_arg = [ 'center', 'bottom' ];
+				break;
+			case 'cc':
+				$crop_arg = [ 'center', 'center' ];
+				break;
+			case 'lt':
+				$crop_arg = [ 'left', 'top' ];
+				break;
+			case 'lc':
+				$crop_arg = [ 'left', 'center' ];
+				break;
+			case 'lb':
+				$crop_arg = [ 'left', 'bottom' ];
+				break;
+			case 'rt':
+				$crop_arg = [ 'right', 'top' ];
+				break;
+			case 'rc':
+				$crop_arg = [ 'right', 'center' ];
+				break;
+			case 'rb':
+				$crop_arg = [ 'right', 'bottom' ];
+				break;
+			default:
+				$crop_arg = false;
+		}
 
 		/** Generate Image */
-		$source = fly_get_attachment_image_src( $id, [ $width, $height ], $crop );
+		$source = fly_get_attachment_image_src( $id, [ $width, $height ], $crop_arg );
 
 		$uri = $source['src'] ?? '';
 		if ( ! $uri ) {

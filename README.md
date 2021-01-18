@@ -25,7 +25,7 @@ That's it!
 ## Setup :hammer:
 
 1. Install the plugin into your `wp-content/plugins` folder
-2. Add the following Rewrite Rule depending upon your web server type.
+2. Add the following Rewrite Rule depending upon your web server type. **Important:** Many plugins (e.g. WebP Express) will add additional, overriding `.htaccess` directives within the `uploads` folder. This may require placing this rewrite there instead of at the root `.htaccess` file.
 
 ### Apache
 
@@ -37,6 +37,14 @@ RewriteCond %{REQUEST_URI} ^/wp-content/uploads/fly-images/.
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . /index.php?esc-fly-image-generate=1 [L]
 </IfModule>
+
+# Or For Multisite
+RewriteEngine On
+RewriteBase /
+RewriteCond %{REQUEST_URI} ^/wp-content/uploads/fly-images/. [OR]
+RewriteCond %{REQUEST_URI} ^/wp-content/uploads/sites/\d+\/fly-images/.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule . /index.php?esc-fly-image-generate=1 [L]
 ````
 ### Nginx
 
