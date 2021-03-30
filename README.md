@@ -54,10 +54,40 @@ RewriteRule . /index.php?esc-fly-image-generate=1 [L]
     }
 ````
 
+## Use in your Gutenberg Blocks
+
+You can also call the following REST API endpoint from within your own blocks to generate images; the Cropping argument is optional.
+
+`/wp-json/esc/v1/dynamic-images/<ImageId>/<Width>/<Height>/<Cropping?>`
+
+### Example
+
+`/wp-json/esc/v1/dynamic-images/100/200/150/lc`  would:
+
+* Resize Image with ID of `100`
+* restrict width to `100` pixels
+* restrict height to `150`
+* Crop from Left-Center
+
+(Note a retina-sized image of 400 x 300 would also be generated)
+
+You may use one of the following arguments; erroneous arguments will result in a 400 error.
+
+| Argument 	| Result  	|
+|----		|---		|
+|  `c`  		|  Center 		|
+|  `cc`  		|  Center 		|
+|  `lc`  		|  Left-Center 		|
+|  `rc`  		|  Right-Center 		|
+|  `lt` 		|  Left-Top 		|
+|  `ct`  		|  Center-Top 		|
+|  `rt`  		|  Right-Top 		|
+|  `lb`  		|  Left-Bottom	|
+|  `cb`  		|  Center-Bottom	|
+|  `rb`  		|  Right-Bottom	|
+
+### Cropping Options
+
 ## Help Wanted :grin:
 
 1. Allow the `.htaccess` rule to be written upon installation and removed when uninstalled.
-
-## To Do
-
-1. Add API Endpoint to this Plugin.
