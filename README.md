@@ -60,6 +60,8 @@ You can also call the following REST API endpoint from within your own blocks to
 
 `/wp-json/esc/v1/dynamic-images/<ImageId>/<Width>/<Height>/<Cropping?>`
 
+**Note: You _cannot_ go to this endpoint directly - you must be logged in to WordPress and in the editor view for the permissions to be satisfied**
+
 ### Example
 
 `/wp-json/esc/v1/dynamic-images/100/200/150/lc`  would:
@@ -73,7 +75,7 @@ You can also call the following REST API endpoint from within your own blocks to
 
 You may use one of the following arguments; erroneous arguments will result in a 400 error.
 
-| Argument 	| Result  	|
+| Argument 	| Cropping Origin  	|
 |----		|---		|
 |  `c`  		|  Center 		|
 |  `cc`  		|  Center 		|
