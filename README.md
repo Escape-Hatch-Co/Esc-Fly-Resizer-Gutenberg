@@ -56,13 +56,15 @@ RewriteRule . /index.php?esc-fly-image-generate=1 [L]
 
 ## Use in your Gutenberg Blocks
 
-You can also call the following REST API endpoint from within your own blocks to generate images; the Cropping argument is optional.
+You can also call the following REST API endpoints from within your own blocks to generate images.
 
-`/wp-json/esc/v1/dynamic-images/<ImageId>/<Width>/<Height>/<Cropping?>`
+### Single Image (returns 1x and 2x)
+
+`GET /wp-json/esc/v1/dynamic-images/<ImageId>/<Width>/<Height>/<Cropping?>`
 
 **Note: You _cannot_ go to this endpoint directly - you must be logged in to WordPress and in the editor view for the permissions to be satisfied**
 
-### Example
+#### Example
 
 `/wp-json/esc/v1/dynamic-images/100/200/150/lc`  would:
 
@@ -88,7 +90,61 @@ You may use one of the following arguments; erroneous arguments will result in a
 |  `cb`  		|  Center-Bottom	|
 |  `rb`  		|  Right-Bottom	|
 
-### Cropping Options
+### Multiple Images (returns 1x and 2x)
+
+`POST /wp-json/esc/v1/dynamic-images/`
+
+Send a `POST` request as a JSON array containing the same arguments above as follows:
+
+```json
+[
+    {
+        "id": 435, //Image ID
+        "width": 400, //Width in pixels (or null)
+        "height": null, //Height in pixels (or null)
+        "crop": "lc", //Cropping or false/null/empty for no cropping
+        "ref": "image-435" //A handle returned in the response (optional)
+    },
+    {
+        "id": 345,
+        "width": 600,
+        "height": 400,
+        "crop": "rb",
+        "ref": "some-other-image"
+    }
+]
+````
+
+Your response will look like this:
+
+```json
+{
+    "image-435": {
+        "1x": {
+            "src": "https://YOURURL.com/wp-content/uploads/fly-images/435/cross-promo@2x-400x0-lc.png",
+            "width": 400,
+            "height": 193
+        },
+        "2x": {
+            "src": "https://YOURURL.com/wp-content/uploads/fly-images/435/cross-promo@2x-800x0-lc.png",
+            "width": 800,
+            "height": 386
+        }
+    },
+    "some-other-image": {
+        "1x": {
+            "src": "https://YOURURL.com/wp-content/uploads/fly-images/345/event-card-600x400-rb.png",
+            "width": 588,
+            "height": 400
+        },
+        "2x": {
+            "src": "https://YOURURL.com/wp-content/uploads/fly-images/345/event-card-1200x800-rb.png",
+            "width": 588,
+            "height": 441
+        }
+    }
+}
+````
 
 ## Help Wanted :grin:
 
