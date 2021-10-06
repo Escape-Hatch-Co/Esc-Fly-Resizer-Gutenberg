@@ -160,10 +160,10 @@ Your response will look like this:
 
 First, set up the WebP Express Settings as follows: 
 
-1. *Destination Folder*: Mingled
-2. *File Extension*: Append .webp
-3. *Destination Structure*: `Image Roots
-4. *Create WebP Files on Request*: Checked.
+1. **Destination Folder**: Mingled
+2. **File Extension**: Append .webp
+3. **Destination Structure**: Image Roots
+4. **Create WebP Files on Request**: Checked.
 
 Click "Save settings in force new .htaccess rules"
 
