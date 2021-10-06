@@ -5,3 +5,9 @@
 # VS Code
 !/.vscode
 !/.vscode/*.code-workspace
+
+# Testing
+.data
+cms
+docker-compose.yml
+docker
