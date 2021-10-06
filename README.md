@@ -56,17 +56,21 @@ RewriteRule ^fly-images/(.*)(\.jpe?g|\.png)(\.webp)?$ /index.php?esc-fly-image-g
 RewriteEngine On
 RewriteBase /
 RewriteCond %{REQUEST_URI} ^/wp-content/uploads/fly-images/.
+RewriteCond %{REQUEST_URI} !\.(webp)$ 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . /index.php?esc-fly-image-generate=1 [L]
 </IfModule>
 
 # Or For Multisite
+<IfModule mod_rewrite.c>
 RewriteEngine On
 RewriteBase /
 RewriteCond %{REQUEST_URI} ^/wp-content/uploads/fly-images/. [OR]
 RewriteCond %{REQUEST_URI} ^/wp-content/uploads/sites/\d+\/fly-images/.
+RewriteCond %{REQUEST_URI} !\.(webp)$ 
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule . /index.php?esc-fly-image-generate=1 [L]
+</IfModule>
 ````
 ### Nginx
 
