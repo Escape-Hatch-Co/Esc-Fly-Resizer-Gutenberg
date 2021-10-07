@@ -80,11 +80,43 @@ class Esch_Fly_Image_Generator {
     }
 
     /**
+     * True if Server can Serve up a  WebP Image
+     *
+     * @return bool
+     */
+    protected function can_serve_webp(): bool {
+        exec( 'which cwebp', $output );
+
+        return (bool) ( $output[0] ?? FALSE );
+    }
+
+    /**
+     * Generates WebP Image from File Path of original (saves in same diretory with .webp affixed)
+     * and returns path to WebP.
+     *
+     * @param $file_path
+     *
+     * @return string
+     */
+    protected function generate_webp_image( $file_path ): string {
+        $webp_path = $file_path . '.webp';
+        exec( sprintf( 'cwebp -q 80 -pre 2 -f 90 "%s" -o "%s"', $file_path,
+                       $webp_path ), $output );
+
+        return $webp_path;
+
+    }
+
+    /**
      * Generates & Returns Image from Fly based upon URL
      */
     public function generate_image() {
         preg_match( '/wp-content\/uploads\/(sites\/\d+\/)?fly-images\/(\d+)\/.+-(\d+)x(\d+)(-[lrc]?[tcb])?/',
                     $_SERVER['REQUEST_URI'] ?? '', $image_args );
+
+        $is_webp_request = preg_match( '/\.webp$/',
+                                       $_SERVER['REQUEST_URI'] ?? '' );
+
         if ( ! $image_args ) {
             $this->generate_404();
 
@@ -124,6 +156,20 @@ class Esch_Fly_Image_Generator {
             return;
         }
 
+        if ( $is_webp_request && ! $this->can_serve_webp() ) {
+            error_log( 'Can not generate webp because cwebp is not installed.' );
+            $this->generate_404();
+
+            return;
+        }
+
+        if ( $is_webp_request ) {
+            $webp_path = $this->generate_webp_image( $original );
+            if ( file_exists( $webp_path ) ) {
+                $original = $webp_path;
+            }
+        }
+
         /**
          * Returns File
          */
@@ -132,15 +178,6 @@ class Esch_Fly_Image_Generator {
 
         header( sprintf( 'Content-Type: %s', $mime_type ) );
         header( sprintf( 'Content-Length: %d', filesize( $original ) ) );
-
-        /**
-         * Don't Cache WebPs for this first go as they are not true WebPs.
-         */
-        if ( preg_match( '/\.webp$/', $_SERVER['REQUEST_URI'] ) ) {
-            $now = new DateTime();
-            header( 'Cache-Control: no-cache, max-age=0' );
-            header( sprintf( 'Expires: %s', $now->format( 'r' ) ) );
-        }
 
         fpassthru( $resource );
         exit( 0 );
