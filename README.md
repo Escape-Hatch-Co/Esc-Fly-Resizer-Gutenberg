@@ -5,7 +5,7 @@ Gutenberg Dynamic Image Generator for Fly Image Resizer
 
 ## The Problem
 
-Fly Dynamic Image resizer allows developers to generate specific sizes depending upon need rather than rely upon WordPress’ set media sizes. These are typically rendered via `fly_get_attachment_image_src` function calls. In Gutenberg, these don't work because everything is generated client-side and then saved to post content. To handle custom sizes in our Gutenberg blocks, we have written an API call that allows these images to be generated when blocks are created (will add this to this repo soon).
+Fly Dynamic Image resizer allows developers to generate specific sizes depending upon need rather than rely upon WordPress’ set media sizes. These are typically rendered via `fly_get_attachment_image_src` function calls. In Gutenberg, these don't work because everything is generated client-side and then saved to post content. To handle custom sizes in our Gutenberg blocks, we have written an API call that allows these images to be generated when blocks are created (see below).
 
 However, if a user ever clears the Fly Images folder, these images will not be deleted and then never resized again unless the user goes and edits the block. (i.e. All images will 404!) :weary:
 
@@ -160,10 +160,10 @@ Your response will look like this:
 
 First, set up the WebP Express Settings as follows: 
 
-1. *Destination Folder*: Mingled
-2. *File Extension*: Append .webp
-3. *Destination Structure*: `Image Roots
-4. *Create WebP Files on Request*: Checked.
+1. **Destination Folder**: Mingled
+2. **File Extension**: Append .webp
+3. **Destination Structure**: Image Roots
+4. **Create WebP Files on Request**: Checked.
 
 Click "Save settings in force new .htaccess rules"
 
