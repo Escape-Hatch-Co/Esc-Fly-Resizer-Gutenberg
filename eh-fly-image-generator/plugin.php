@@ -30,9 +30,9 @@ class Esch_Fly_Image_Generator {
      * Initialization of Plugin
      */
     public function init() {
-        add_filter( 'wp', array( $this, 'render_response' ) );
-        add_filter( 'init', array( $this, 'rewrite_rules' ) );
-        add_filter( 'query_vars', array( $this, 'query_vars' ) );
+        add_filter( 'wp', [ $this, 'render_response' ] );
+        add_filter( 'init', [ $this, 'rewrite_rules' ] );
+        add_filter( 'query_vars', [ $this, 'query_vars' ] );
     }
 
     /**
@@ -75,14 +75,16 @@ class Esch_Fly_Image_Generator {
      * Adds Rewrite Rules.
      */
     public function rewrite_rules() {
-        add_rewrite_rule( 'esc-fly-image/generate$', 'index.php?esc-fly-image-generate=1', 'top' );
+        add_rewrite_rule( 'esc-fly-image/generate$',
+                          'index.php?esc-fly-image-generate=1', 'top' );
     }
 
     /**
      * Generates & Returns Image from Fly based upon URL
      */
     public function generate_image() {
-        preg_match( '/wp-content\/uploads\/(sites\/\d+\/)?fly-images\/(\d+)\/.+-(\d+)x(\d+)(-[lrc]?[tcb])?/', $_SERVER['REQUEST_URI'] ?? '', $image_args );
+        preg_match( '/wp-content\/uploads\/(sites\/\d+\/)?fly-images\/(\d+)\/.+-(\d+)x(\d+)(-[lrc]?[tcb])?/',
+                    $_SERVER['REQUEST_URI'] ?? '', $image_args );
         if ( ! $image_args ) {
             $this->generate_404();
 
@@ -99,7 +101,8 @@ class Esch_Fly_Image_Generator {
         $crop_arg = self::esch_get_fly_crop_arg_from_abbrev( $crop );
 
         /** Generate Image */
-        $source = fly_get_attachment_image_src( $id, [ $width, $height ], $crop_arg );
+        $source = fly_get_attachment_image_src( $id, [ $width, $height ],
+                                                $crop_arg );
 
         $uri = $source['src'] ?? '';
         if ( ! $uri ) {
@@ -129,6 +132,16 @@ class Esch_Fly_Image_Generator {
 
         header( sprintf( 'Content-Type: %s', $mime_type ) );
         header( sprintf( 'Content-Length: %d', filesize( $original ) ) );
+
+        /**
+         * Don't Cache WebPs for this first go as they are not true WebPs.
+         */
+        if ( preg_match( '/\.webp$/', $_SERVER['REQUEST_URI'] ) ) {
+            $now = new DateTime();
+            header( 'Cache-Control: no-cache, max-age=0' );
+            header( sprintf( 'Expires: %s', $now->format( 'r' ) ) );
+        }
+
         fpassthru( $resource );
         exit( 0 );
     }
@@ -153,7 +166,7 @@ class Esch_Fly_Image_Generator {
     public static function esch_get_fly_crop_arg_from_abbrev( $crop ) {
         switch ( $crop ) {
             case 'c':
-                $crop_arg = true;
+                $crop_arg = TRUE;
                 break;
             case 'ct':
                 $crop_arg = [ 'center', 'top' ];
@@ -183,7 +196,7 @@ class Esch_Fly_Image_Generator {
                 $crop_arg = [ 'right', 'bottom' ];
                 break;
             default:
-                $crop_arg = false;
+                $crop_arg = FALSE;
         }
 
         return $crop_arg;
@@ -193,4 +206,5 @@ class Esch_Fly_Image_Generator {
 add_action( 'plugins_loaded', [ new Esch_Fly_Image_Generator(), 'init' ] );
 
 /** Activation function */
-register_activation_hook( __FILE__, [ new Esch_Fly_Image_Generator(), 'flush_rules' ] );
+register_activation_hook( __FILE__,
+                          [ new Esch_Fly_Image_Generator(), 'flush_rules' ] );
