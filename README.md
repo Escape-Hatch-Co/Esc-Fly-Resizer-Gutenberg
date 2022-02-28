@@ -58,6 +58,17 @@ RewriteRule . /index.php?esc-fly-image-generate=1 [L]
     }
 ````
 
+#### Special NGINX Note: 
+
+We have found that on some hosts (e.g. WP Engine), the `$_SERVER['REQUEST_URI']` variable passed is that of the script instead of the original URL, likely due a complicated proxy setup.  In that prticular case, change the rule to the following: 
+
+````
+    location ^~ /wp-content/uploads/fly-images/ {
+        try_files $uri /index.php?esc-fly-image-generate=1&file=$uri
+    }
+````
+
+
 ## Use in your Gutenberg Blocks
 
 You can also call the following REST API endpoints from within your own blocks to generate images.
